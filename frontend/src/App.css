@@ -1,0 +1,67 @@
+.landingPageContainer{
+  height: 100vh;
+  width:100vw;
+  background-image: url("/background.png");
+  background-size: cover;
+}
+
+.landingPageContainer nav{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+ 
+}
+.landingPageContainer nav button{
+  background-color: orange;
+  color: antiquewhite;
+  font-weight: 500;
+}
+.landingPageContainer nav .navHeader{
+  margin:1rem 0 0 1rem;
+
+}
+.landingPageContainer nav .navList{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin:1rem 1rem 0 0;
+  cursor: pointer;
+}
+
+.landingMainContainer{
+  height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-inline: 4rem;
+
+}
+.landingMainContainer h2{
+  font-size: 3rem;
+  padding: none;
+}
+.landingMainContainer img{
+ height: 65vh;
+}
+.landingMainContainer p{
+  font-size: 1.2rem;
+  margin-top: 1rem;
+}
+.landingMainContainer div[role="button"]{
+  background-color: orange;
+  width: fit-content;
+  padding: 0.2rem;
+  padding-inline: 1rem;
+  border-radius: 10px;
+  font-size: 1.3rem;
+  margin-top: 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+ 
+} 
+.landingMainContainer a{
+ color: white;
+
+}
