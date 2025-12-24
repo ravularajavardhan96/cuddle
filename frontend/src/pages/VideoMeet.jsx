@@ -46,9 +46,12 @@ export default function VideoMeet(){
     let connectToSocketServer=()=>{
         socketRef.current = io.connect(server_url,{secure:false});
         socketRef.current.on('signal',gotMessageFromServer);
+
         socketRef.current.on('connect',()=>{
+
             socketRef.current.emit('join-call',window.location.href);
             socketIdRef.current = socketRef.current.id;
+            
             socketRef.current.on("chat-message",addMessage);
 
             socketRef.current.on("user-left",(id)=>{
@@ -57,6 +60,12 @@ export default function VideoMeet(){
             socketRef.current.on("user-joined",(id,clients)=>{
                 clients.forEach((socketListId)=>{
                     connections[socketListId] = new RTCPeerConnection(peerConfigConnections);
+                    connections[socketListId].onicecandidate =(event)=>{
+                        if(event.candidate !==null){
+                            socketRef.current.emit("signal",socketListId,JSON.stringiry({'ice':event.candidate}))
+                        }
+                    }
+                    cp
                 })
             })
         })
