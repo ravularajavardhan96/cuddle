@@ -164,7 +164,7 @@ export default function VideoMeet(){
             }
 
             if(videoAvailable || audioAvailable){
-                const userMediaStream = await navigator.mediaDevices.getUserMedia({video:videoAvailable,audio:audioAvailable});
+                const userMediaStream = await navigator.mediaDevices.getUserMedia({video:videoAvailable,audio:audioAvailable}); 
                 if(userMediaStream){
                     window.localStream = userMediaStream;
                     if(localVideoRef.current){
@@ -185,8 +185,8 @@ export default function VideoMeet(){
             window.localStream.getTracks().forEach(track=>track.stop())
 
         }catch(e){
-
-        }
+          console.log(e);
+        } 
         window.localStream = stream;
         localVideoRef.current.srcObject = stream;
 
@@ -194,7 +194,7 @@ export default function VideoMeet(){
             if(id === socketIdRef.current) continue;
             connections[id].addStream(window.localStream)
             connections[id].createOffer().then((description)=>{
-                connections[id].seetLocalDescription(description)
+                connections[id].setLocalDescription(description)
                 .then(()=>{
                     socketIdRef.current.emit("signal",id,JSON.stringify({"sdp":connections[id].localDescription}))
                 }).catch(e=>console.log(e)); 
@@ -204,8 +204,8 @@ export default function VideoMeet(){
         stream.getTracks().forEach(track=>track.onended =() =>{
             setVideo(false);
             setAudio(false);
-            try{
-                let track = localVideoRef.current.srcObject.getTracks()
+            try{    
+                let tracks = localVideoRef.current.srcObject.getTracks()
                 tracks.forEach(track=>track.stop())
 
             }catch(e){
@@ -246,7 +246,7 @@ export default function VideoMeet(){
 
         canvas.getContext('2d').fillRect(0,0,width,height);
         let stream = canvas.captureStream();
-        return Object.assign(streamgetVideoTracks()[0],{enabled : false})
+        return Object.assign(stream.getVideoTracks()[0],{enabled : false})
     }
 
     let getUserMedia=()=>{
@@ -260,7 +260,7 @@ export default function VideoMeet(){
         }else{
 
             try{
-                let tracks = localVideoRef.current.srcObject.getTracks();
+                let tracks = localVideoRef.current.srcObject.getTracks();  
                 tracks.forEach(track=>track.stop())
             }catch(e){}
         }
@@ -295,18 +295,28 @@ return(
         <video ref={localVideoRef} autoPlay muted></video>
     </div>
 </> :
-<>
-<video ref = {localVideoRef} autoPlay muted></video>
-
-{videos.map((video)=>{
-    <div key={video.socketId}>
-         
-    </div>
-})}
-</>
-}
-   
+<div>
+    
+    <video ref = {localVideoRef} autoPlay muted></video>
+    
+    {videos.map((video)=>{
+        <div key={video.socketId}>
+             <h2>{video.socketId}</h2>
+             <video
+             data-socket={video.socketId}
+             ref={ref=>{
+                if(ref && video.stream){
+                    ref.srcObject = video.stream;
+                }
+             }}></video>
+        </div>
+    })}
+</div>
+    }
     </>
+    
+
+    
 
 )
 }
