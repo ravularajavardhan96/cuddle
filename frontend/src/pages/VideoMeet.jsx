@@ -83,6 +83,7 @@ export default function VideoMeet(){
             socketRef.current.on("user-joined",(id,clients)=>{
                 clients.forEach((socketListId)=>{
                     connections[socketListId] = new RTCPeerConnection(peerConfigConnections);
+
                     connections[socketListId].onicecandidate =(event)=>{
                         if(event.candidate !==null){
                             socketRef.current.emit("signal",socketListId,JSON.stringify({'ice':event.candidate}))
@@ -91,9 +92,9 @@ export default function VideoMeet(){
                     connections[socketListId].onaddstream = (event)=>{
                         let videoExists = videoRef.current.find(video=>video.socketId === socketListId);
                         if(videoExists){
-                            setVideo(videos=>{
-                                const updatedVideos = video.map(video=>
-                                    video.socketId == socketListId ? {...video,stream:event.stream}:video
+                            setVideos(videos=>{
+                                const updatedVideos = videos.map(video=>
+                                    video.socketId == socketListId ? {...videos,stream:event.stream}:videos
                                 );
                                 videoRef.current = updatedVideos;
                                 return updatedVideos;
